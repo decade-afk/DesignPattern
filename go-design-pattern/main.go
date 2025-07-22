@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	. "go-design-pattern/creational-patterns"
+	s "go-design-pattern/structural-patterns"
 )
 
 func main() {
@@ -70,4 +71,75 @@ func main() {
 	// 打印新对象名称
 	fmt.Println(newObject.(*ConcretePrototype).Name)
 
+	// 适配器模式
+	// 创建一个 ThirdPartyLogger 实例
+	thirdPartyLogger := &s.MyThirdPartyLogger{}
+
+	// 使用适配器创建一个 Logger 实例
+	logger = &s.ThirdPartyLoggerAdapter{Logger: thirdPartyLogger}
+
+	// 使用 Logger 实例记录消息
+	logger.Log("这是一条消息")
+
+	// 桥接模式
+	smsNotification := s.NewSMSNotification()     // 创建短信通知对象
+	emailNotification := s.NewEmailNotification() // 创建邮件通知对象
+
+	// 发送短信通知
+	smsNotification.SendNotification("This is a SMS notification.")
+
+	// 发送邮件通知
+	emailNotification.SendNotification("This is an email notification.")
+
+	// 组合模式
+	// 创建文件系统
+	root := &s.Directory{Name: "root"}
+	documents := &s.Directory{Name: "documents"}
+	pictures := &s.Directory{Name: "pictures"}
+	music := &s.Directory{Name: "music"}
+	file1 := &s.File{Name: "file1.txt"}
+	file2 := &s.File{Name: "file2.txt"}
+	file3 := &s.File{Name: "file3.txt"}
+
+	root.AddChild(documents).
+		AddChild(pictures).
+		AddChild(music)
+	documents.
+		AddChild(file1).
+		AddChild(file2)
+	pictures.AddChild(file3)
+
+	// 打印文件系统的层次结构
+	root.List(0)
+
+	// 装饰器模式
+	toyota := s.Car{Brand: "Toyota", Price: 10000}
+	decorator := s.ExtraPriceDecorator{ExtraPrice: 500}
+	decoratedCar := decorator.DecoratePrice(toyota)
+	fmt.Printf("%+v\n", decoratedCar)
+
+	// 外观模式
+	computer := s.NewComputerFacade()
+	computer.Run()
+
+	// 享元模式
+	factory := &s.FlyweightFactory{Flyweights: make(map[string]s.Flyweight)}
+
+	// 获取共享对象，如果工厂中不存在则创建
+	flyweight1 := factory.GetFlyweight("flyweight1")
+	flyweight2 := factory.GetFlyweight("flyweight2")
+	flyweight3 := factory.GetFlyweight("flyweight3")
+	flyweight4 := factory.GetFlyweight("flyweight4")
+	flyweight5 := factory.GetFlyweight("flyweight5")
+
+	// 调用共享对象的操作方法
+	flyweight1.Operation("external state 1")
+	flyweight2.Operation("external state 2")
+	flyweight3.Operation("external state 3")
+	flyweight4.Operation("external state 4")
+	flyweight5.Operation("external state 5")
+
+	// 代理模式
+	proxy := &s.Proxy{}
+	fmt.Println(proxy.Request())
 }
